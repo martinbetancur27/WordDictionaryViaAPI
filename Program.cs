@@ -4,17 +4,34 @@ using System.Net.Http;
 
 
 Console.WriteLine("Input the word");
-string word = Console.ReadLine();
+string wordToSearch = Console.ReadLine();
 
 string url = "https://api.dictionaryapi.dev/api/v2/entries/en/";
 
 HttpClient client = new HttpClient();
 
-var httpResponse = await client.GetAsync(url + word);
+var httpResponse = await client.GetAsync(url + wordToSearch);
 
 if (httpResponse.IsSuccessStatusCode)
 {
     var content = await httpResponse.Content.ReadAsStringAsync();
 
-    Console.WriteLine(content);
+ /*   //Enable case-insensitive property name matching with System.Text.Json
+    var options = new JsonSerializerOptions
+    {
+        PropertyNameCaseInsensitive = true
+    };*/
+
+    List<Word> resultWord =
+    JsonSerializer.Deserialize<List<Word>>(content);
+
+    var firstElement = resultWord.First();
+    var listMeaning = firstElement.meanings;
+    var listDefinitions = listMeaning[0].definitions;
+
+    foreach (var word in listDefinitions)
+    {
+        Console.WriteLine(" ******************************\n\n");
+        Console.WriteLine(word.definition + "\n");
+    }
 }
