@@ -31,7 +31,11 @@ if (httpResponse.IsSuccessStatusCode)
 
     foreach (var word in listDefinitions)
     {
-        Console.WriteLine(" ******************************\n\n");
-        Console.WriteLine(word.definition + "\n");
+        Console.WriteLine(" ******* Definition and Example *******\n");
+        Console.WriteLine("--> " + word.definition + "\n");
+        Console.WriteLine("--> " + word.example + "\n");
     }
+
+    Console.WriteLine("\n*** You know the meaning of --> " + wordToSearch + "***");
+
 }
