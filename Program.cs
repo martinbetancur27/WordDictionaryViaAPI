@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 using System.Net.Http;
 
 
-Console.WriteLine("Input the word");
+Console.WriteLine("Input the word: ");
 string wordToSearch = Console.ReadLine();
 
 string url = "https://api.dictionaryapi.dev/api/v2/entries/en/";
@@ -21,29 +21,29 @@ if (httpResponse.IsSuccessStatusCode)
     string finalContent = "WORD: " + wordToSearch.ToUpper() + "\n";
     var content = await httpResponse.Content.ReadAsStringAsync();
 
- /*   //Enable case-insensitive property name matching with System.Text.Json
+    //Enable case-insensitive property name matching with System.Text.Json
     var options = new JsonSerializerOptions
     {
         PropertyNameCaseInsensitive = true
-    };*/
+    };
 
     List<Word> resultWord =
-    JsonSerializer.Deserialize<List<Word>>(content);
+    JsonSerializer.Deserialize<List<Word>>(content, options);
 
     var firstElement = resultWord.First();
-    var listMeaning = firstElement.meanings;
-    var listDefinitions = listMeaning[0].definitions;
+    var listMeaning = firstElement.Meanings;
+    var listDefinitions = listMeaning[0].Definitions;
 
     foreach (var word in listDefinitions)
     {
         
-        finalContent += title + "--> " + word.definition + "\n" + "--> " + word.example + "\n";
+        finalContent += title + "--> " + word.definition + "\n" + "--> " + word.Example + "\n";
 
     }
 
     Console.WriteLine(finalContent);
 
-    Console.WriteLine("\n*** You know the meaning of --> " + wordToSearch + "***");
+    Console.WriteLine("\n*** You know the meaning of --> " + wordToSearch + " ***");
 
     Console.WriteLine("\nDo you want to save your search to a file? Enter y/n");
     saveSearch = Console.ReadLine() == "y" ? true : false;
@@ -58,7 +58,5 @@ if (httpResponse.IsSuccessStatusCode)
         {
             Console.WriteLine("Sorry, can't save: " + ex.Message);
         }
-        
     }
-
 }
