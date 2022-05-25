@@ -2,10 +2,12 @@
 using System.Text.Json.Serialization;
 using System.Net.Http;
 
-
-string url = "https://api.dictionaryapi.dev/api/v2/entries/en/";
+//Source: https://dictionaryapi.dev/
+string urlApi = "https://api.dictionaryapi.dev/api/v2/entries/en/";
 bool makeSearch = true;
 string wordToSearch;
+bool saveSearch = false;
+string title = "\n ******* Definition and Example *******\n";
 
 HttpClient client = new HttpClient();
 HttpResponseMessage httpResponse;
@@ -15,13 +17,11 @@ while (makeSearch)
     Console.WriteLine("> Input the word: ");
     wordToSearch = Console.ReadLine();
 
-    httpResponse = await client.GetAsync(url + wordToSearch);
+    httpResponse = await client.GetAsync(urlApi + wordToSearch);
 
     if (httpResponse.IsSuccessStatusCode)
     {
-        string title = "\n ******* Definition and Example *******\n";
-        bool saveSearch = false;
-
+        
         string finalContent = "WORD: " + wordToSearch.ToUpper() + "\n";
         var content = await httpResponse.Content.ReadAsStringAsync();
 
@@ -34,6 +34,7 @@ while (makeSearch)
         List<Word> resultWord =
         JsonSerializer.Deserialize<List<Word>>(content, options);
 
+        //Logic API: The first element are the definitions
         var firstElement = resultWord.First();
         var listMeaning = firstElement.Meanings;
         var listDefinitions = listMeaning[0].Definitions;
