@@ -14,6 +14,11 @@ var httpResponse = await client.GetAsync(url + wordToSearch);
 
 if (httpResponse.IsSuccessStatusCode)
 {
+
+    string title = "\n ******* Definition and Example *******\n";
+    bool saveSearch = false;
+
+    string finalContent = "WORD: " + wordToSearch.ToUpper() + "\n";
     var content = await httpResponse.Content.ReadAsStringAsync();
 
  /*   //Enable case-insensitive property name matching with System.Text.Json
@@ -31,11 +36,29 @@ if (httpResponse.IsSuccessStatusCode)
 
     foreach (var word in listDefinitions)
     {
-        Console.WriteLine(" ******* Definition and Example *******\n");
-        Console.WriteLine("--> " + word.definition + "\n");
-        Console.WriteLine("--> " + word.example + "\n");
+        
+        finalContent += title + "--> " + word.definition + "\n" + "--> " + word.example + "\n";
+
     }
 
+    Console.WriteLine(finalContent);
+
     Console.WriteLine("\n*** You know the meaning of --> " + wordToSearch + "***");
+
+    Console.WriteLine("\nDo you want to save your search to a file? Enter y/n");
+    saveSearch = Console.ReadLine() == "y" ? true : false;
+
+    if(saveSearch)
+    {
+        try
+        {
+        await File.WriteAllTextAsync(wordToSearch + ".txt", finalContent);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Sorry, can't save: " + ex.Message);
+        }
+        
+    }
 
 }
