@@ -60,3 +60,7 @@ if (httpResponse.IsSuccessStatusCode)
         }
     }
 }
+else
+{
+    Console.WriteLine("The word "+ wordToSearch + " is not in our dictionary.");
+}
