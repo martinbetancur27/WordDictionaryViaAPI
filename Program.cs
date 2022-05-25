@@ -38,17 +38,24 @@ while (makeSearch)
             List<Word> resultWord =
             JsonSerializer.Deserialize<List<Word>>(content, options);
 
-            //Logic API: The first element are the definitions
-            var firstElement = resultWord[0];
-            var listMeaning = firstElement.Meanings;
-            var listDefinitions = listMeaning[0].Definitions;
+            //Logic API: The first element is the element that I need
 
-            foreach (var word in listDefinitions)
+            /*var firstElement = resultWord[0];
+            var listMeaning = firstElement.Meanings;
+            var listDefinitions = listMeaning[0].Definitions;*/
+
+            /*foreach (var word in listDefinitions)
             {
                 
                 finalContent += title + "--> " + word.definition + "\n" + "--> " + word.Example + "\n";
 
-            }
+            }*/
+
+            //Back code but with Arrow Function
+            resultWord[0].Meanings[0].Definitions.ForEach(d => 
+            {
+                finalContent += title + "--> " + d.definition + "\n" + "--> " + d.Example + "\n";
+            });
 
             Console.WriteLine(finalContent);
 
