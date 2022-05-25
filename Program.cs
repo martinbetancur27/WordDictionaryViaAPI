@@ -2,7 +2,9 @@
 using System.Text.Json.Serialization;
 using System.Net.Http;
 
-//Source: https://dictionaryapi.dev/
+//Source API: https://dictionaryapi.dev/
+//Sorce JSON to C# Classes: https://json2csharp.com/
+
 string urlApi = "https://api.dictionaryapi.dev/api/v2/entries/en/";
 bool makeSearch = true;
 string wordToSearch;
