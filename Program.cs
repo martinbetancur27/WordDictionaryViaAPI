@@ -39,7 +39,7 @@ while (makeSearch)
             JsonSerializer.Deserialize<List<Word>>(content, options);
 
             //Logic API: The first element are the definitions
-            var firstElement = resultWord.First();
+            var firstElement = resultWord[0];
             var listMeaning = firstElement.Meanings;
             var listDefinitions = listMeaning[0].Definitions;
 
