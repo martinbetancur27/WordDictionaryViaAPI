@@ -1,63 +1,30 @@
-﻿using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.Net.Http;
-
-//Source API: https://dictionaryapi.dev/
-//Sorce JSON to C# Classes: https://json2csharp.com/
-
-string urlApi = "https://api.dictionaryapi.dev/api/v2/entries/en/";
-bool makeSearch = true;
-string wordToSearch;
+﻿bool makeSearch = true;
+string? wordToSearch;
 bool saveSearch = false;
-string title = "\n ******* Definition and Example *******\n";
-
-HttpClient client = new HttpClient();
-HttpResponseMessage httpResponse;
+string result;
+IDefinitionsApi searchByApi = new ApiDev();
+Task<List<string>> definitions;
 
 while (makeSearch)
 {
-    Console.WriteLine("> Input the word: ");
-    wordToSearch = Console.ReadLine();
-
     try
     {
-        httpResponse = await client.GetAsync(urlApi + wordToSearch);
+        Console.WriteLine("> Input the word: ");
+        wordToSearch = Console.ReadLine();
 
-        if (httpResponse.IsSuccessStatusCode)
+        definitions = searchByApi.GetDefinitionsAsync(wordToSearch);
+        await definitions;
+
+        if (searchByApi.WasWordFound())
         {
-            
-            string finalContent = "WORD: " + wordToSearch.ToUpper() + "\n";
-            var content = await httpResponse.Content.ReadAsStringAsync();
+            result = "*** " + wordToSearch.ToUpper() + " ***\n";
 
-            //Enable case-insensitive property name matching with System.Text.Json
-            var options = new JsonSerializerOptions
+            foreach (var definition in await definitions)
             {
-                PropertyNameCaseInsensitive = true
-            };
+                result += "\n" + definition + "\n";
+            }
 
-            List<Word> resultWord =
-            JsonSerializer.Deserialize<List<Word>>(content, options);
-
-            //Logic API: The first element is the element that I need
-
-            /*var firstElement = resultWord[0];
-            var listMeaning = firstElement.Meanings;
-            var listDefinitions = listMeaning[0].Definitions;*/
-
-            /*foreach (var word in listDefinitions)
-            {
-                
-                finalContent += title + "--> " + word.definition + "\n" + "--> " + word.Example + "\n";
-
-            }*/
-
-            //Back code but with Arrow Function
-            resultWord[0].Meanings[0].Definitions.ForEach(d => 
-            {
-                finalContent += title + "--> " + d.definition + "\n" + "--> " + d.Example + "\n";
-            });
-
-            Console.WriteLine(finalContent);
+            Console.WriteLine(result);
 
             Console.WriteLine("\n*** Congratulations, You know the meaning of " + wordToSearch + " ***");
 
@@ -68,8 +35,8 @@ while (makeSearch)
             {
                 try
                 {
-                    await File.WriteAllTextAsync(wordToSearch + ".txt", finalContent);
-                    Console.WriteLine("***** Saved *****");
+                    ISave saveWord = SaveTxt.GetInstance();
+                    await saveWord.SaveAsync(wordToSearch, result);
                 }
                 catch (Exception ex)
                 {
@@ -79,9 +46,9 @@ while (makeSearch)
         }
         else
         {
-            Console.WriteLine("The word "+ wordToSearch + " is not in our dictionary.");
+            Console.WriteLine("The word not exists in the dictionary");
         }
-    
+
         Console.WriteLine("\n> Do you want to perform another search? Enter y/n");
         makeSearch = Console.ReadLine() == "y" ? true : false;
     }
