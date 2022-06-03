@@ -17,7 +17,7 @@ https://replit.com/@MartinBetancur/API-powered-Word-Dictionary
 
 Tools used:
 ==
-- CSharp with dotnet 6 (Async, JSON deserializer, Http request, exception handling, etc)
+- CSharp with dotnet 6 (Interfaces, POO, Async, JSON deserializer, Http request, exception handling, etc)
 
 - Source JSON to C# Classes: https://json2csharp.com/
 
